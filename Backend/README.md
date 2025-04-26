@@ -55,6 +55,9 @@ Send a JSON object with the following structure:
     }
   }
   ```
+- **Explanation for End User:**
+  - You will receive a `token` (JWT) that you should save and use as an Authorization header (`Bearer <token>`) for authenticated requests.
+  - The `user` object contains your registered details.
 
 ### Validation Error
 
@@ -71,6 +74,8 @@ Send a JSON object with the following structure:
     ]
   }
   ```
+- **Explanation for End User:**
+  - If your input data is invalid or missing, you will receive an `errors` array describing what needs to be fixed (e.g., missing email, invalid password length).
 
 ### Missing Fields
 
@@ -81,6 +86,8 @@ Send a JSON object with the following structure:
     "error": "All fields are required"
   }
   ```
+- **Explanation for End User:**
+  - If you omit required fields, you will receive an error message indicating that all fields are required.
 
 ---
 
@@ -103,3 +110,86 @@ Send a JSON object with the following structure:
 
 - Set `Content-Type: application/json` in the request header.
 - The returned JWT token can be used for authentication in future requests.
+
+---
+
+## /users/profile
+
+### Endpoint
+
+`GET /users/profile`
+
+### Description
+
+Returns the authenticated user's profile information. Requires a valid JWT token in the `Authorization` header or as a cookie.
+
+### Request Example
+
+**Headers:**
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+### Success Response
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "_id": "user id",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice@example.com"
+  }
+  ```
+
+### Unauthorized Response
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+---
+
+## /users/logout
+
+### Endpoint
+
+`GET /users/logout`
+
+### Description
+
+Logs out the authenticated user by blacklisting the JWT token and clearing the authentication cookie.
+
+### Request Example
+
+**Headers:**
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+### Success Response
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+### Unauthorized Response
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
