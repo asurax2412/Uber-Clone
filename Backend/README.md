@@ -243,6 +243,97 @@ Send a JSON object with the following structure:
 
 ---
 
+## /captains/profile
+
+### Endpoint
+
+`GET /captains/profile`
+
+### Description
+
+Returns the authenticated captain's profile information. Requires a valid JWT token in the `Authorization` header or as a cookie.
+
+### Request Example
+
+**Headers:**
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+### Success Response
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "captain": {
+      "_id": "captain id",
+      "fullname": {
+        "firstname": "Bob",
+        "lastname": "Driver"
+      },
+      "email": "bob.driver@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+    }
+  }
+  ```
+
+### Unauthorized Response
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+---
+
+## /captains/logout
+
+### Endpoint
+
+`GET /captains/logout`
+
+### Description
+
+Logs out the authenticated captain by blacklisting the JWT token and clearing the authentication cookie.
+
+### Request Example
+
+**Headers:**
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+### Success Response
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+### Unauthorized Response
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+---
+
 ## /users/profile
 
 ### Endpoint
