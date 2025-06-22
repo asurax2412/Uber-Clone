@@ -1,5 +1,8 @@
-import React,{ useState} from 'react';
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { UserContextData } from '../context/userContext'; // path depends on your folder structure
+
 
 const UserSignup = () => {
 
@@ -9,22 +12,35 @@ const UserSignup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const { user, setUser } = React.useContext(UserContextData);
+
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     // Here you would typically handle the signup logic, such as sending the user data to your backend for registration.
     console.log('User signed up');
 
-    setUserData({
-      fullname:{
-        firstName: firstName,
-        lastName: lastName
+    const newUserData = {
+      fullname: {
+        firstname: firstName,
+        lastname: lastName
       },
       email: email,
       password: password
-    });
+    }
 
-    console.log('userData:', userData);
-    
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUserData)
+    console.log('Response:', response.data);
+    console.log('userData:', newUserData);
+
+    if(response.status === 201) {
+      const data = response.data;
+      setUser(data.user);
+      navigate('/home');
+    }
+
+
     setEmail('');
     setPassword('');
     setFirstName('');
@@ -81,7 +97,7 @@ const UserSignup = () => {
             placeholder='password' />
 
           <button className='bg-[#111] text-white font-semibold mb-2 rounded px-4 py-2  w-full text-lg'>
-            Login</button>
+            Create Account</button>
         </form>
 
         <p className='text-center'>Already have a account ? <Link to='/userlogin' className='text-blue-600'>Login here</Link></p>

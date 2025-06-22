@@ -1,25 +1,39 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { UserContextData } from '../context/userContext'; // path depends on your folder structure
+
 
 const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
+  const { user, setUser } = React.useContext(UserContextData);
 
-
-
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     // Here you would typically handle the login logic, such as sending the email and password to your backend for authentication.
     console.log('Email:', email);
     console.log('Password:', password);
     // Reset the form fields after submission
 
-    setUserData({
+    const newUserData = {
       email: email,
       password: password
-    });
-    console.log('userData:', userData);
+    }
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, newUserData)
+    console.log('Response:', response.data);
+    console.log('status:', response.status);
+
+    if (response.status === 201) {
+      const data = response.data;
+      setUserData(data.user);
+      console.log('User Data:', userData);
+      navigate('/home'); // Redirect to home page after successful login
+    }
+
     setEmail('');
     setPassword('');
   };
